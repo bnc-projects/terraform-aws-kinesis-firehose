@@ -1,13 +1,11 @@
-variable "kinesis-firehose_name" {
+variable "firehose_name" {
   type        = string
   description = "The name of kinesis firehose"
-  default     = ""
 }
 
 variable "s3_bucket_arn" {
   type        = string
   description = "The ARN of the S3 bucket"
-  default     = ""
 }
 
 variable "s3_bucket_prefix" {

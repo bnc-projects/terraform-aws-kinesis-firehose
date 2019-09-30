@@ -3,12 +3,12 @@ locals {
   firehose_namespace           = "AWS/Firehose"
   firehose_treat_missing_data  = "breaching"
   firehose_dimensions          = {
-    DeliveryStreamName = var.kinesis-firehose_name
+    DeliveryStreamName = var.firehose_name
   }
 }
 
 resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream" {
-  name        = var.kinesis-firehose_name
+  name        = var.firehose_name
   destination = "extended_s3"
   tags        = var.tags
 
@@ -63,16 +63,16 @@ resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream" {
 }
 
 resource "aws_cloudwatch_log_group" "log_group" {
-  name  = format("%s-log-group", var.kinesis-firehose_name)
+  name  = format("%s-log-group", var.firehose_name)
 }
 
 resource "aws_cloudwatch_log_stream" "log_stream" {
-  name           = format("%s-log-stream", var.kinesis-firehose_name)
+  name           = format("%s-log-stream", var.firehose_name)
   log_group_name = aws_cloudwatch_log_group.log_group.name
 }
 
 resource "aws_cloudwatch_metric_alarm" "firehose_alarm" {
-  alarm_name          = format("%s-alarm", var.kinesis-firehose_name)
+  alarm_name          = format("%s-alarm", var.firehose_name)
   comparison_operator = local.firehose_comparison_operator
   evaluation_periods  = var.firehose_alarm_evaluation_periods
   metric_name         = "DeliveryToS3.Success"
@@ -80,7 +80,7 @@ resource "aws_cloudwatch_metric_alarm" "firehose_alarm" {
   period              = var.firehose_alarm_period
   statistic           = var.firehose_alarm_statistic
   threshold           = var.firehose_alarm_threshold
-  alarm_description   = format("Alarm when data is no longer successfully pushed to S3 from %s for 5 minutes", var.kinesis-firehose_name)
+  alarm_description   = format("Alarm when data is no longer successfully pushed to S3 from %s for 5 minutes", var.firehose_name)
   treat_missing_data  = local.firehose_treat_missing_data
   dimensions          = local.firehose_dimensions
   alarm_actions       = var.alarm_actions
