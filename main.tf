@@ -8,7 +8,7 @@ locals {
   count                        = var.kinesis_stream_as_source == false ? 0 : 1
 }
 
-resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream" {
+resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream_kinesis_source" {
   count       = var.kinesis_stream_as_source == true ? 1 : 0
   name        = var.firehose_name
   destination = "extended_s3"
@@ -69,7 +69,7 @@ resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream" {
   }
 }
 
-resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream" {
+resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream_direct_put" {
   count       = var.kinesis_stream_as_source == false ? 1 : 0
   name        = var.firehose_name
   destination = "extended_s3"
