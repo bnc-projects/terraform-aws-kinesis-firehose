@@ -1,11 +1,3 @@
-resource "aws_iam_role" "firehose_access_kinesis_stream_role" {
-  count              = local.count
-  name               = format("%s-kinesis-stream-role", var.firehose_name)
-  assume_role_policy = data.aws_iam_policy_document.firehose_delivery_assume_policy.json
-  tags               = var.tags
-}
-
-
 data "aws_iam_policy_document" "firehose_delivery_assume_policy" {
   statement {
     sid    = "AllowFirehoseToAssumeRole"
@@ -30,32 +22,6 @@ data "aws_iam_policy_document" "firehose_delivery_assume_policy" {
     }
   }
 }
-
-resource "aws_iam_role_policy" "firehose_access_kinesis_stream_policy" {
-  count  = local.count
-  name   = "allow_firehose_read_from_kinesis_stream"
-  role   = aws_iam_role.firehose_access_kinesis_stream_role[0].id
-  policy = data.aws_iam_policy_document.read_from_kinesis_stream[0].json
-}
-
-data "aws_iam_policy_document" "read_from_kinesis_stream" {
-  count = local.count
-  statement {
-    sid    = "AllowFirehoseToReadDataFromKinesisStream"
-    effect = "Allow"
-
-    actions = [
-      "kinesis:DescribeStream",
-      "kinesis:GetShardIterator",
-      "kinesis:GetRecords"
-    ]
-
-    resources = [
-      var.kinesis_stream_arn
-    ]
-  }
-}
-
 
 resource "aws_iam_role" "firehose_delivery_role" {
   name               = format("%s-s3-role", var.firehose_name)
@@ -127,6 +93,31 @@ data "aws_iam_policy_document" "firehose_delivery_policy_doc" {
 
     resources = [
       "*"
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "firehose_access_kinesis_stream_policy" {
+  count  = local.count
+  name   = "allow_firehose_read_from_kinesis_stream"
+  role   = aws_iam_role.firehose_delivery_role.id
+  policy = data.aws_iam_policy_document.read_from_kinesis_stream[0].json
+}
+
+data "aws_iam_policy_document" "read_from_kinesis_stream" {
+  count = local.count
+  statement {
+    sid    = "AllowFirehoseToReadDataFromKinesisStream"
+    effect = "Allow"
+
+    actions = [
+      "kinesis:DescribeStream",
+      "kinesis:GetShardIterator",
+      "kinesis:GetRecords"
+    ]
+
+    resources = [
+      var.kinesis_stream_arn
     ]
   }
 }
