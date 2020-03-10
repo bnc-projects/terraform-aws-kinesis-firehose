@@ -16,7 +16,7 @@ resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream_kinesis_sour
 
   kinesis_source_configuration {
     kinesis_stream_arn = var.kinesis_stream_arn
-    role_arn           = aws_iam_role.firehose_access_role.arn
+    role_arn           = aws_iam_role.firehose_access_kinesis_stream_role[0].arn
   }
 
 
@@ -126,18 +126,15 @@ resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream_direct_put" 
 }
 
 resource "aws_cloudwatch_log_group" "log_group" {
-  count = local.count
   name  = format("%s-log-group", var.firehose_name)
 }
 
 resource "aws_cloudwatch_log_stream" "log_stream" {
-  count          = local.count
   name           = format("%s-log-stream", var.firehose_name)
   log_group_name = aws_cloudwatch_log_group.log_group.name
 }
 
 resource "aws_cloudwatch_metric_alarm" "firehose_alarm" {
-  count               = local.count
   alarm_name          = format("%s-alarm", var.firehose_name)
   comparison_operator = local.firehose_comparison_operator
   evaluation_periods  = var.firehose_alarm_evaluation_periods
