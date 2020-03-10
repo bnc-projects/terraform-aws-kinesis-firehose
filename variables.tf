@@ -1,3 +1,9 @@
+variable "create_firehose" {
+  type        = bool
+  description = "Indicate whether to create kinesis firehose"
+  default     = false
+}
+
 variable "firehose_name" {
   type        = string
   description = "The name of kinesis firehose"
@@ -106,6 +112,18 @@ variable "alarm_actions" {
   type        = list(string)
   description = "The list of actions to execute when this alarm transitions into an ALARM state from any other state. Each action is specified as an Amazon Resource Name (ARN)."
   default     = []
+}
+
+variable "kinesis_stream_as_source" {
+  type        = bool
+  description = "Indicate whether to set kinesis stream as input for firehose"
+  default     = false
+}
+
+variable "kinesis_stream_arn" {
+  type        = string
+  description = "The arn of kinesis stream"
+  default     = ""
 }
 
 variable "tags" {

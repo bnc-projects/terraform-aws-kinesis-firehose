@@ -46,6 +46,8 @@ module "kinesis_firehose" {
 | data_format_conversion_schema | The schema configuration of glue table | map | `map` | no |
 | aws_account_id | The aws account id that creates resources | string | `""` | no |
 | alarm_actions | Actions to execute when this alarm transitions into an ALARM state from any other state. Each action is specified as an Amazon Resource Name (ARN) | list | `[]` | no |
+| kinesis_stream_as_source| Specify whether to set a kinesis stream as source. | bool | `false` | no |
+| kinesis_stream_arn | Tn Amazon Resource Name (ARN) of kinesis stream that is set as source of delivery stream | string | `` | no |
 | tags | A map of tags to add to the appropriate resources | map | `<map>` | no |
 
 ## Outputs
