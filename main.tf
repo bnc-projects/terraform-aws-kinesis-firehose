@@ -126,7 +126,7 @@ resource "aws_kinesis_firehose_delivery_stream" "extended_s3_stream_direct_put" 
 }
 
 resource "aws_cloudwatch_log_group" "log_group" {
-  name  = format("%s-log-group", var.firehose_name)
+  name = format("%s-log-group", var.firehose_name)
 }
 
 resource "aws_cloudwatch_log_stream" "log_stream" {
