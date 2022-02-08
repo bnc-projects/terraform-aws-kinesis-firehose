@@ -38,6 +38,12 @@ variable "enable_s3_backup" {
   default     = "Enabled"
 }
 
+variable "s3_backup_config_error_output_prefix"{
+  type        = string
+  description = "The name of error_output_prefix in s3_backup_configuration"
+  default     = "!{firehose:error-output-type}/"
+}
+
 variable "buffer_size" {
   type        = number
   description = "Buffer incoming data to the specified size, in MBs, before delivering it to the destination"
